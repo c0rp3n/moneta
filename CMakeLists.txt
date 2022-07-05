@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(Moneta
-    VERSION 0.0.01
+    VERSION 0.0.02
     DESCRIPTION "An arena allocation library for trivial types."
     LANGUAGES CXX
 )
