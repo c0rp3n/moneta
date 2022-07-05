@@ -27,11 +27,13 @@ public:
 
     RecyclingArena()                                 = default;
     RecyclingArena(const RecyclingArena&)            = delete;
-    RecyclingArena(RecyclingArena&&)                 = delete;
-    RecyclingArena& operator=(const RecyclingArena&) = delete;
-    RecyclingArena& operator=(RecyclingArena&&)      = delete;
+    RecyclingArena(RecyclingArena&&)                 = default;
+    ~RecyclingArena()                                = default;
 
     RecyclingArena(arena&& arena) noexcept;
+
+    RecyclingArena& operator=(const RecyclingArena&) = delete;
+    RecyclingArena& operator=(RecyclingArena&&)      = default;
 
     pointer_type get() noexcept;
     void         put(pointer_type ptr) noexcept;

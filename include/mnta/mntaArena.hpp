@@ -30,7 +30,9 @@ public:
 
     Arena()                        = default;
     Arena(const Arena&)            = delete;
-    Arena(Arena&&)                 = delete;
+    Arena(Arena&&)                 = default;
+    ~Arena()                       = default;
+
     Arena& operator=(const Arena&) = delete;
     Arena& operator=(Arena&&)      = delete;
 
