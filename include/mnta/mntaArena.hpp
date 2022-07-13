@@ -38,6 +38,16 @@ public:
 
     pointer_type alligned_alloc() noexcept;
 
+    MNTA_FORCEINLINE friend T* get(Arena& arena) noexcept
+    {
+        return arena.alligned_alloc();
+    }
+
+    MNTA_FORCEINLINE friend void put(Arena& arena, pointer_type ptr) noexcept
+    {
+        // do nothing
+    }
+
 private:
     active_block m_current;
     block_list   m_blocks;

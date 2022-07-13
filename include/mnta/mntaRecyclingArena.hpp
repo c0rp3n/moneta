@@ -38,6 +38,16 @@ public:
     pointer_type get() noexcept;
     void         put(pointer_type ptr) noexcept;
 
+    MNTA_FORCEINLINE friend T* get(RecyclingArena& arena) noexcept
+    {
+        return arena.get();
+    }
+
+    MNTA_FORCEINLINE friend void put(RecyclingArena& arena, pointer_type ptr) noexcept
+    {
+        arena.put();
+    }
+
 private:
     arena    m_arena;
     free_vec m_free;

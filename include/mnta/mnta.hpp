@@ -6,5 +6,6 @@
 #define mnta_hpp
 
 #include "mntaArena.hpp"
+#include "mntaRecyclingArena.hpp"
 
 #endif // mnta_hpp
