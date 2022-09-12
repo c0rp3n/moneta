@@ -15,7 +15,7 @@ MNTA_FORCEINLINE T* mnta::Arena<T, BlockSize>::alligned_alloc() noexcept
     {
         // slow path as we do not have any memory free at the moment
 
-        blocks.emplace_front(std::move(m_current.refresh()));
+        m_blocks.emplace_front(std::move(m_current.refresh()));
 
         return m_current.get();
     }
