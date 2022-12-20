@@ -36,9 +36,9 @@ template <std::size_t Size>
 MNTA_FORCEINLINE MemoryBlock create_memory_block() noexcept
 {
 #ifdef _WIN32
-    return MemoryBlock{ reinterpret_cast<std::byte*>(_aligned_malloc(Size, Size)) };
+    return MemoryBlock{reinterpret_cast<std::byte*>(_aligned_malloc(Size, Size))};
 #else
-    return {reinterpret_cast<std::byte*>(std::aligned_alloc(Size, Size))};
+    return MemoryBlock{reinterpret_cast<std::byte*>(std::aligned_alloc(Size, Size))};
 #endif
 }
 
@@ -83,7 +83,7 @@ public:
         m_memory  = memory_block{};
         m_current = m_memory.get();
 
-        return std::move(ret);
+        return ret;
     }
 
 private:
