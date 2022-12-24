@@ -18,19 +18,24 @@
 
 MNTA_BEGIN_NAMESPACE
 
-#ifdef _WIN32
-struct aligned_delete
+namespace detail
 {
-    MNTA_FORCEINLINE void operator()(std::byte* ptr) const
-    {
-        _aligned_free(ptr);
-    }
-};
 
-using MemoryBlock = std::unique_ptr<std::byte[], aligned_delete>;
+struct aligned_delete
+    {
+        MNTA_FORCEINLINE void operator()(std::byte* ptr) const
+        {
+#ifdef _WIN32
+            _aligned_free(ptr);
 #else
-using MemoryBlock = std::unique_ptr<std::byte[]>;
+            std::free(ptr);
 #endif
+        }
+    };
+
+}
+
+using MemoryBlock = std::unique_ptr<std::byte[], detail::aligned_delete>;
 
 template <std::size_t Size>
 MNTA_FORCEINLINE MemoryBlock create_memory_block() noexcept

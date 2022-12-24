@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Moneta
     VERSION 0.0.04
     DESCRIPTION "An arena allocation library for trivial types."
-    LANGUAGES CXX
-)
+    LANGUAGES CXX)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -20,30 +19,24 @@ else()
 endif()
 
 add_library(mnta_lib INTERFACE)
-target_include_directories
-(
+target_include_directories(
     mnta_lib
         INTERFACE
             $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-            $<INSTALL_INTERFACE:include>
-)
+            $<INSTALL_INTERFACE:include>)
 
-write_basic_package_version_file
-(
+write_basic_package_version_file(
     "${PROJECT_BINARY_DIR}/mntaConfigVersion.cmake"
-    COMPATIBILITY SameMinorVersion
-)
+    COMPATIBILITY SameMinorVersion)
 
-install
-(
+install(
     TARGETS mnta
     EXPORT mntaTargets
         LIBRARY DESTINATION lib COMPONENT Runtime
         ARCHIVE DESTINATION lib COMPONENT Development
         RUNTIME DESTINATION bin COMPONENT Runtime
         PUBLIC_HEADER DESTINATION include COMPONENT Development
-        BUNDLE DESTINATION bin COMPONENT Runtime
-)
+        BUNDLE DESTINATION bin COMPONENT Runtime)
 
 configure_package_config_file("${PROJECT_SOURCE_DIR}/cmake/mntaConfig.cmake.in"
                               "${PROJECT_BINARY_DIR}/mntaConfig.cmake"
