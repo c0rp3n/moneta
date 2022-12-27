@@ -85,7 +85,7 @@ public:
     MNTA_FORCEINLINE memory_block refresh()
     {
         memory_block ret = std::move(m_memory);
-        m_memory  = memory_block{};
+        m_memory  = create_memory_block<Size>();
         m_current = m_memory.get();
 
         return ret;
