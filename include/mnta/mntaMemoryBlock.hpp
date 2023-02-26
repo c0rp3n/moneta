@@ -18,27 +18,32 @@
 
 MNTA_BEGIN_NAMESPACE
 
-#ifdef _WIN32
-struct aligned_delete
+namespace detail
 {
-    MNTA_FORCEINLINE void operator()(std::byte* ptr) const
-    {
-        _aligned_free(ptr);
-    }
-};
 
-using MemoryBlock = std::unique_ptr<std::byte[], aligned_delete>;
+struct aligned_delete
+    {
+        MNTA_FORCEINLINE void operator()(std::byte* ptr) const
+        {
+#ifdef _WIN32
+            _aligned_free(ptr);
 #else
-using MemoryBlock = std::unique_ptr<std::byte[]>;
+            std::free(ptr);
 #endif
+        }
+    };
+
+}
+
+using MemoryBlock = std::unique_ptr<std::byte[], detail::aligned_delete>;
 
 template <std::size_t Size>
 MNTA_FORCEINLINE MemoryBlock create_memory_block() noexcept
 {
 #ifdef _WIN32
-    return MemoryBlock{ reinterpret_cast<std::byte*>(_aligned_malloc(Size, Size)) };
+    return MemoryBlock{reinterpret_cast<std::byte*>(_aligned_malloc(Size, Size))};
 #else
-    return {reinterpret_cast<std::byte*>(std::aligned_alloc(Size, Size))};
+    return MemoryBlock{reinterpret_cast<std::byte*>(std::aligned_alloc(Size, Size))};
 #endif
 }
 
@@ -80,10 +85,10 @@ public:
     MNTA_FORCEINLINE memory_block refresh()
     {
         memory_block ret = std::move(m_memory);
-        m_memory  = memory_block{};
+        m_memory  = create_memory_block<Size>();
         m_current = m_memory.get();
 
-        return std::move(ret);
+        return ret;
     }
 
 private:
