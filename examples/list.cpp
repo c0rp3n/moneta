@@ -5,6 +5,9 @@
 //
 
 #include "mntaArena.hpp"
+#include "mntaLiterals.hpp"
+
+MNTA_USE_LITERALS
 
 namespace
 {
@@ -16,11 +19,11 @@ namespace
         list_member* next;
     };
 
-    template<class T>
+    template<class T, class Allocator = mnta::Arena<list_member<T>, 1_KiB>>
     struct list
     {
-        list_member<T>*             members;
-        mnta::Arena<list_member<T>> allocator;
+        list_member<T>* members;
+        Allocator       allocator;
 
         void push_front(T&& v) noexcept
         {
@@ -35,6 +38,7 @@ namespace
         {
             if (members == nullptr) { return; }
 
+            put(allocator, members);
             members = members->next;
         }
     };
