@@ -18,10 +18,12 @@
 
 MNTA_BEGIN_NAMESPACE
 
+using MemoryBlock = std::unique_ptr<std::byte[], detail::aligned_delete>;
+
 namespace detail
 {
 
-struct aligned_delete
+    struct aligned_delete
     {
         MNTA_FORCEINLINE void operator()(std::byte* ptr) const
         {
@@ -33,18 +35,16 @@ struct aligned_delete
         }
     };
 
-}
+    template <std::size_t Size>
+    MNTA_FORCEINLINE MemoryBlock create_memory_block() noexcept
+    {
+    #ifdef _WIN32
+        return MemoryBlock{reinterpret_cast<std::byte*>(_aligned_malloc(Size, Size))};
+    #else
+        return MemoryBlock{reinterpret_cast<std::byte*>(std::aligned_alloc(Size, Size))};
+    #endif
+    }
 
-using MemoryBlock = std::unique_ptr<std::byte[], detail::aligned_delete>;
-
-template <std::size_t Size>
-MNTA_FORCEINLINE MemoryBlock create_memory_block() noexcept
-{
-#ifdef _WIN32
-    return MemoryBlock{reinterpret_cast<std::byte*>(_aligned_malloc(Size, Size))};
-#else
-    return MemoryBlock{reinterpret_cast<std::byte*>(std::aligned_alloc(Size, Size))};
-#endif
 }
 
 template<mnta::Allocable T, std::size_t Size = 1024>
@@ -54,7 +54,7 @@ public:
     using memory_block = MemoryBlock;
 
     MNTA_FORCEINLINE ActiveMemoryBlock() noexcept
-        : m_memory(create_memory_block<Size>()), m_current(m_memory.get())
+        : m_memory(detail::create_memory_block<Size>()), m_current(m_memory.get())
     {}
 
     MNTA_FORCEINLINE std::byte* begin() const noexcept
@@ -85,7 +85,7 @@ public:
     MNTA_FORCEINLINE memory_block refresh()
     {
         memory_block ret = std::move(m_memory);
-        m_memory  = create_memory_block<Size>();
+        m_memory  = detail::create_memory_block<Size>();
         m_current = m_memory.get();
 
         return ret;
