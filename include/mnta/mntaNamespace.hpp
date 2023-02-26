@@ -10,7 +10,7 @@
 #pragma once
 
 #define MNTA_BEGIN_NAMESPACE namespace mnta {
-#define MNTA_END_NAMESPACE   } // mars
+#define MNTA_END_NAMESPACE   } // mnta
 
 MNTA_BEGIN_NAMESPACE
 MNTA_END_NAMESPACE

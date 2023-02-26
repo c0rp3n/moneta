@@ -26,7 +26,7 @@ namespace
         {
             list_member<T>* next = members;
 
-            members = allocator.alligned_alloc();
+            members = get(allocator);
             members->value = std::move(v);
             members->next  = next;
         }

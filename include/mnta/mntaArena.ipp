@@ -19,5 +19,4 @@ MNTA_FORCEINLINE T* mnta::Arena<T, BlockSize>::alligned_alloc() noexcept
 
         return m_current.get();
     }
-
 }
